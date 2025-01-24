@@ -1,8 +1,57 @@
 "use client";
 import { useAppDispatch, useAppSelector } from "@/app/redux";
 import { setIsSideBarCollapsed } from "@/state";
-import { Menu as MenuIcon } from "lucide-react";
+import {
+  Archive as ArchiveIcon,
+  CircleDollarSign as CircleDollarSignIcon,
+  Clipboard as ClipboardIcon,
+  Layout as LayoutIcon,
+  LucideIcon,
+  Menu as MenuIcon,
+  SlidersHorizontal as SlidersHorizontalIcon,
+  User as UserIcon,
+} from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import React from "react";
+
+interface SidebarLinkProps {
+  href: string;
+  icon: LucideIcon;
+  label: string;
+  isCollapsed: boolean;
+}
+
+const SidebarLink = ({
+  href,
+  icon: Icon,
+  label,
+  isCollapsed,
+}: SidebarLinkProps) => {
+  const pathname = usePathname();
+  const isActive =
+    pathname === href || (pathname === "/" && href === "/dashboard");
+
+  return (
+    <Link href={href}>
+      <div
+        className={`cursor-pointer flex items-center ${
+          isCollapsed ? "justify-center py-4" : "justify-start px-8 py-4"
+        } hover:text-blue-500 hover:bg-blue-100 gap-3 transition-colors ${
+          isActive ? "bg-blue-200 text-white" : ""
+        }`}
+      >
+        <Icon className="w-6 h-6 !text-gray-700"></Icon>
+
+        <span
+          className={`${isCollapsed ? "hidden" : "font-medium text-gray-700"}`}
+        >
+          {label}
+        </span>
+      </div>
+    </Link>
+  );
+};
 
 const Sidebar = () => {
   const dispatch = useAppDispatch();
@@ -21,10 +70,19 @@ const Sidebar = () => {
   return (
     <div className={sidebarClassNames}>
       {/* top logo */}
-      <div className="flex gap-3 justify-between md:justify-normal items-center pt-8">
+      <div
+        className={`flex gap-3 justify-between md:justify-normal items-center pt-8 ${
+          isSideBarCollapsed ? "px-5" : "px-8"
+        }`}
+      >
         <div>logo</div>
-        <h1 className="font-extrabold text-2xl">allanheil</h1>
-
+        <h1
+          className={`font-extrabold text-2xl ${
+            isSideBarCollapsed ? "hidden" : "block"
+          }`}
+        >
+          allanheil
+        </h1>
         <button
           className="md:hidden px-3 py-3 bg-gray-100 rounded-full hover:bg-blue-100"
           onClick={toggleSideBar}
@@ -33,9 +91,50 @@ const Sidebar = () => {
         </button>
       </div>
       {/* links */}
-      <div className="flex-grow mt-8">{/* links here*/}</div>
+      <div className="flex-grow mt-8">
+        <SidebarLink
+          href="/dashboard"
+          icon={LayoutIcon}
+          label={"Dashboard"}
+          isCollapsed={isSideBarCollapsed}
+        />
+        <SidebarLink
+          href="/inventory"
+          icon={ArchiveIcon}
+          label={"Inventory"}
+          isCollapsed={isSideBarCollapsed}
+        />
+        <SidebarLink
+          href="/products"
+          icon={ClipboardIcon}
+          label={"Products"}
+          isCollapsed={isSideBarCollapsed}
+        />
+        <SidebarLink
+          href="/users"
+          icon={UserIcon}
+          label={"Users"}
+          isCollapsed={isSideBarCollapsed}
+        />
+        <SidebarLink
+          href="/expenses"
+          icon={CircleDollarSignIcon}
+          label={"Expenses"}
+          isCollapsed={isSideBarCollapsed}
+        />
+        <SidebarLink
+          href="/settings"
+          icon={SlidersHorizontalIcon}
+          label={"Settings"}
+          isCollapsed={isSideBarCollapsed}
+        />
+      </div>
       {/* footer */}
-      <div>
+      <div
+        className={`bg-pink-200 ${
+          isSideBarCollapsed ? "hidden" : "block mb-10"
+        }`}
+      >
         <p className="text-center text-xs text-gray-800">
           &copy; 2024 allanheil
         </p>
