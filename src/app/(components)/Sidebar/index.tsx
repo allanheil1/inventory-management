@@ -1,21 +1,37 @@
 "use client";
+import { useAppDispatch, useAppSelector } from "@/app/redux";
+import { setIsSideBarCollapsed } from "@/state";
 import { Menu as MenuIcon } from "lucide-react";
 import React from "react";
 
 const Sidebar = () => {
+  const dispatch = useAppDispatch();
+  const isSideBarCollapsed = useAppSelector(
+    (state) => state.global.isSidebarCollapsed
+  );
+
+  const toggleSideBar = () => {
+    dispatch(setIsSideBarCollapsed(!isSideBarCollapsed));
+  };
+
+  const sidebarClassNames = `fixed flex flex-col ${
+    isSideBarCollapsed ? "w-0 md:w-16" : "w-72 md:w-64"
+  } bg-white transition-all duration-300 overflow-hidden h-full shadow-md z-40`;
+
   return (
-    <div className="bg-green-200">
+    <div className={sidebarClassNames}>
       {/* top logo */}
       <div className="flex gap-3 justify-between md:justify-normal items-center pt-8">
         <div>logo</div>
         <h1 className="font-extrabold text-2xl">allanheil</h1>
+
+        <button
+          className="md:hidden px-3 py-3 bg-gray-100 rounded-full hover:bg-blue-100"
+          onClick={toggleSideBar}
+        >
+          <MenuIcon className="w-4 h-4" />
+        </button>
       </div>
-      <button
-        className="md:hidden px-3 py-3 bg-gray-100 rounded-full hover:bg-blue-100"
-        onClick={() => {}}
-      >
-        <MenuIcon className="w-4 h-4" />
-      </button>
       {/* links */}
       <div className="flex-grow mt-8">{/* links here*/}</div>
       {/* footer */}
