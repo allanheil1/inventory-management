@@ -40,17 +40,19 @@ export const getDashboardMetrics = async (
         },
       }
     );
-    const expenseByCategory = expenseByCategorySummaryRaw.map((item) => ({
-      ...item,
-      amount: item.amount.toString(),
-    }));
+    const expenseByCategorySummary = expenseByCategorySummaryRaw.map(
+      (item) => ({
+        ...item,
+        amount: item.amount.toString(),
+      })
+    );
 
     res.json({
       popularProducts,
       saleSummary,
       purchaseSummary,
       expenseSummary,
-      expenseByCategory,
+      expenseByCategorySummary,
     });
   } catch (error) {
     res.status(500).json({ message: "error retrieving dashboard metrics" });
